@@ -34,7 +34,7 @@ vim.schedule(function()
 end)
 
 -- Enable break indent
-vim.o.breakinden = true
+vim.o.breakindent = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 
