@@ -1,10 +1,7 @@
 ---@param event vim.api.keyset.create_autocmd.callback_args
 function SetDocumentHighlight(event)
   -- The following two autocommands are used to highlight references of the
-  -- word under your cursor when your cursor rests there for a little while.
   --    See `:help CursorHold` for information about when this is executed
-  --
-  -- When you move your cursor, the highlights will be cleared (the second autocommand).
   local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
     buffer = event.buf,
@@ -30,8 +27,6 @@ end
 ---@param event vim.api.keyset.create_autocmd.callback_args
 ---@param opts table<string, boolean | nil>
 function SetKeymap(event, opts)
-  -- In this case, we create a function that lets us more easily define mappings specific
-  -- for LSP related items. It sets the mode, buffer and description for us each time.
   local map = function(keys, func, desc, mode)
     if opts[keys] ~= false then
       mode = mode or 'n'
@@ -40,11 +35,9 @@ function SetKeymap(event, opts)
   end
 
   -- Rename the variable under your cursor.
-  --  Most Language Servers support renaming across files, etc.
   map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
 
   -- Execute a code action, usually your cursor needs to be on top of an error
-  -- or a suggestion from your LSP for this to activate.
   map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
   -- Find references for the word under your cursor.
@@ -55,8 +48,6 @@ function SetKeymap(event, opts)
   map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
   -- Jump to the definition of the word under your cursor.
-  --  This is where a variable was first declared, or where a function is defined, etc.
-  --  To jump back, press <C-t>.
   map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
   -- WARN: This is not Goto Definition, this is Goto Declaration.
@@ -64,7 +55,6 @@ function SetKeymap(event, opts)
   map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
   -- Fuzzy find all the symbols in your current document.
-  --  Symbols are things like variables, functions, types, etc.
   map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
 
   -- Fuzzy find all the symbols in your current workspace.
@@ -72,10 +62,9 @@ function SetKeymap(event, opts)
   map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
 
   -- Jump to the type of the word under your cursor.
-  --  Useful when you're not sure what type a variable is and you want to see
-  --  the definition of its *type*, not where it was *defined*.
   map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
+  -- Show diagnostics of the line under your cursor.
   map('gsd', function()
     local _, win = vim.diagnostic.open_float { scope = 'l' }
     if win == nil then
@@ -87,8 +76,6 @@ function SetKeymap(event, opts)
 
   -- The following code creates a keymap to toggle inlay hints in your
   -- code, if the language server you are using supports them
-  --
-  -- This may be unwanted, since they displace some of your code
   map('<leader>th', function()
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
   end, '[T]oggle Inlay [H]ints')
@@ -166,35 +153,7 @@ return {
     { 'j-hui/fidget.nvim', opts = {} },
   },
   config = function()
-    -- Brief aside: **What is LSP?**
-    --
-    -- LSP is an initialism you've probably heard, but might not understand what it is.
-    --
-    -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-    -- and language tooling communicate in a standardized fashion.
-    --
-    -- In general, you have a "server" which is some tool built to understand a particular
-    -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-    -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-    -- processes that communicate with some "client" - in this case, Neovim!
-    --
-    -- LSP provides Neovim with features like:
-    --  - Go to definition
-    --  - Find references
-    --  - Autocompletion
-    --  - Symbol Search
-    --  - and more!
-    --
-    -- Thus, Language Servers are external tools that must be installed separately from
-    -- Neovim. This is where `mason` and related plugins come into play.
-    --
-    -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-    -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
     --  This function gets run when an LSP attaches to a particular buffer.
-    --    That is to say, every time a new file is opened that is associated with
-    --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-    --    function will be executed to configure the current buffer
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
       callback = LspAttach,
