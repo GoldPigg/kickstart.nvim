@@ -1,6 +1,8 @@
 ---@class Util
 local M = {}
 
+local ANSI_MAX_LEN = 20
+
 --- Modified from 'lazy.core.util'.
 ---@param modname string
 ---@param fn fun(modname:string, modpath:string, type:'file' | 'link' | 'directory')
@@ -47,6 +49,82 @@ function M.get_submods(modname)
   end)
 
   return res
+end
+
+---@alias Style vim.api.keyset.highlight
+
+---@param color string[]
+---@return string
+function M.format_color(color)
+  local res = '#'
+  for _, v in ipairs(color) do
+    res = res .. string.format('%02X', v)
+  end
+  return res
+end
+
+---@param str string
+---@return Style | nil
+function M.parse_ansi(str)
+  local args = vim.tbl_map(tonumber, vim.split(str, ';'))
+
+  if #args == 1 then
+    if args[1] == 0 then
+      return {}
+    end
+  end
+
+  if #args == 5 then
+    local color = M.format_color { args[3], args[4], args[5] }
+    if args[1] == 38 then
+      return { fg = color }
+    end
+    if args[1] == 48 then
+      return { bg = color }
+    end
+  end
+
+  return nil
+end
+
+---@param str string
+---@return string
+---@return Style[]
+function M.parse_ansi_string(str)
+  local text, styles = '', {}
+  local cur, cur_style = 0, {}
+  local i = 1
+  while i <= #str do
+    local flag = false
+    local j = i + 1
+    if str:sub(i, i) == '\x1B' then
+      while j <= #str and j - i < ANSI_MAX_LEN do
+        if str:sub(j, j) == 'm' then
+          flag = true
+          break
+        end
+        j = j + 1
+      end
+    end
+
+    if flag then
+      local style = M.parse_ansi(str:sub(i + 2, j - 1))
+      if style == {} then
+        cur_style = {}
+      elseif style then
+        cur_style = vim.tbl_extend('force', cur_style, style)
+      end
+      i = j
+    else
+      cur = cur + 1
+      styles[cur] = cur_style
+      text = text .. str:sub(i, i)
+    end
+
+    i = i + 1
+  end
+
+  return text, styles
 end
 
 return M
