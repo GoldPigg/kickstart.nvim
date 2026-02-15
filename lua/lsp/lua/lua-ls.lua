@@ -1,5 +1,7 @@
 return {
   lua_ls = {
+    -- Higher version will break lazydev.
+    version = '3.16.4',
     -- cmd = { ... },
     -- filetypes = { ... },
     -- capabilities = {},

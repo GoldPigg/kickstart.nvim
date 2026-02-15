@@ -27,7 +27,15 @@ return {
       end
     end)
 
-    local ensure_installed = vim.tbl_keys(servers or {})
+    local ensure_installed = {}
+    for server_name, server in pairs(servers) do
+      local config = { server_name }
+      if server.version then
+        config.version = server.version
+        config.auto_update = false
+      end
+      ensure_installed[#ensure_installed + 1] = config
+    end
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
     require('mason-lspconfig').setup {
