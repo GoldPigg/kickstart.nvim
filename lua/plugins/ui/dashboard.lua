@@ -9,7 +9,7 @@ return {
 
     local theme = 'hyper'
     local vertical_center = true
-    local footer = {}
+    local footer = { '☄  And in that light, I find deliverance.' }
     local file_path = vim.fn.stdpath 'config' .. '/header.txt'
 
     ---@type Style[][]
@@ -59,6 +59,7 @@ return {
       pattern = 'DashboardLoaded',
       callback = function()
         vim.api.nvim_set_hl(0, 'DashboardHeader', {})
+        vim.api.nvim_set_hl(0, 'DashboardFooter', { fg = '#A034CA', bold = true, standout = true })
 
         local ns = vim.api.nvim_create_namespace 'DashboardHeader'
         vim.api.nvim_win_set_hl_ns(db.winid, ns)
