@@ -7,7 +7,7 @@ return {
     local util = require 'util'
     local db = require 'dashboard'
 
-    local theme = 'hyper'
+    local theme = 'doom'
     local vertical_center = true
     local footer = { '☄  And in that light, I find deliverance.' }
     local file_path = vim.fn.stdpath 'config' .. '/header.txt'
@@ -26,32 +26,38 @@ return {
       config = {
         header = header,
         vertical_center = vertical_center,
-        shortcut = {
-          { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+        center = {
           {
-            icon = ' ',
-            icon_hl = '@variable',
-            desc = 'Files',
-            group = 'Label',
-            action = 'Telescope find_files',
+            icon = '󰒲 ',
+            desc = 'Manage Plugins       ',
+            key = 'l',
+            key_format = ' %s',
+            action = 'Lazy',
+          },
+          {
+            icon = ' ',
+            desc = 'Manage LSP',
+            key = 'm',
+            key_format = ' %s',
+            action = 'Mason',
+          },
+          {
+            icon = '󰈞 ',
+            desc = 'Recent Files',
             key = 'f',
+            key_hl = 'Number',
+            key_format = ' %s',
+            action = 'Telescope oldfiles',
           },
           {
-            desc = ' Apps',
-            group = 'DiagnosticHint',
-            action = 'Telescope app',
-            key = 'a',
-          },
-          {
-            desc = ' dotfiles',
-            group = 'Number',
-            action = 'Telescope dotfiles',
-            key = 'd',
+            icon = ' ',
+            desc = 'Recent Projects',
+            key = 'p',
+            key_format = ' %s',
+            action = 'Telescope projects',
           },
         },
         footer = footer,
-        project = { limit = 2 },
-        mru = { limit = 5 },
       },
     }
 
