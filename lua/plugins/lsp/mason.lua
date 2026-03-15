@@ -3,7 +3,9 @@
 return {
   'mason-org/mason-lspconfig.nvim',
   dependencies = {
-    { 'mason-org/mason.nvim', opts = {} },
+    { 'mason-org/mason.nvim', opts = { github = {
+      download_url_template = 'https://gh-proxy.org/https://github.com/%s/releases/download/%s/%s',
+    } } },
     'WhoIsSethDaniel/mason-tool-installer.nvim',
 
     -- Allows extra capabilities provided by blink.cmp
