@@ -27,6 +27,9 @@ rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  git = {
+    url_format = 'https://gh-proxy.org/https://github.com/%s.git',
+  },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 
   -- NOTE: Plugins can also be added by using a table,
