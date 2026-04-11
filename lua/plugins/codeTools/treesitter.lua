@@ -3,6 +3,19 @@ return { -- Highlight, edit, and navigate code
   build = ':TSUpdate',
   branch = 'main',
   config = function()
+    local mirror_url = 'https://gh-proxy.org/https://github.com'
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'TSUpdate',
+      callback = function()
+        for _, config in pairs(require 'nvim-treesitter.parsers') do
+          local install_info = config.install_info
+          if install_info then
+            install_info.url = install_info.url:gsub('https://github.com', mirror_url)
+          end
+        end
+      end,
+    })
+
     local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
     require('nvim-treesitter').install(parsers)
 
