@@ -39,7 +39,6 @@ return {
     end
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-    vim.print(servers)
     for name, server in pairs(servers) do
       vim.lsp.config(name, server)
       vim.lsp.enable(name)
