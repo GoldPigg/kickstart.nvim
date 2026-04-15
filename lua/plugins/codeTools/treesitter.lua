@@ -16,7 +16,24 @@ return { -- Highlight, edit, and navigate code
       end,
     })
 
-    local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+    local parsers = {
+      'bash',
+      'c',
+      'diff',
+      'html',
+      'lua',
+      'luadoc',
+      'markdown',
+      'markdown_inline',
+      'query',
+      'vim',
+      'vimdoc',
+      'javascript',
+      'typescript',
+      'css',
+      'html',
+      'vue',
+    }
     require('nvim-treesitter').install(parsers)
 
     vim.api.nvim_create_autocmd('FileType', {
