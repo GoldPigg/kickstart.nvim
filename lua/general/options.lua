@@ -78,3 +78,15 @@ local powershell_options = {
 for option, value in pairs(powershell_options) do
   vim.opt[option] = value
 end
+
+-- Fold
+vim.o.foldcolumn = '1'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.opt.fillchars = {
+  fold = ' ',
+  foldopen = '',
+  foldsep = ' ',
+  foldclose = '',
+}
