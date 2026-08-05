@@ -85,6 +85,7 @@ return {
         vim.api.nvim_set_hl(0, 'DashboardFooter', { fg = '#A034CA', bold = true, standout = true })
         vim.api.nvim_open_term(0, {})
       end,
+      once = true,
     })
   end,
   dependencies = { { 'nvim-tree/nvim-web-devicons' } },
